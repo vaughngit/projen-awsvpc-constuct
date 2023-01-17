@@ -17,31 +17,31 @@ test('vpc unit test', () => {
     costcenter: 'tnc',
     environment: 'test',
     name: 'testvpc',
-    cidr: '172.16.0.0/16'
+    cidr: '172.16.0.0/16',
   });
 
   const template = Template.fromStack(stack);
-  template.resourceCountIs('aws:ec2:vpc', 1);
+  template.resourceCountIs('AWS::EC2::VPC', 1);
 });
 
 test('confirm vpc property output ', () => {
-    const app = new App();
-    const stack = new Stack(app, 'testStack', {
-        env: { account: '111122223333', region: 'us-east-1' },
-      });
-  
-    const testvpc = new VTVpc(stack, 'VTVpicConstruct', {
-        solutionName: 'UnitestVPC',
-        costcenter: 'tnc',
-        environment: 'test',
-        name: 'testvpc',
-        cidr: '172.16.0.0/16'
-      });
-  
-    Template.fromStack(stack);
-    //template.resourceCountIs('AWS::Lambda::Function', 1);
-    expect(testvpc.vpc).toBeInstanceOf(Vpc);
+  const app = new App();
+  const stack = new Stack(app, 'testStack', {
+    env: { account: '111122223333', region: 'us-east-1' },
   });
+
+  const testvpc = new VTVpc(stack, 'VTVpicConstruct', {
+    solutionName: 'UnitestVPC',
+    costcenter: 'tnc',
+    environment: 'test',
+    name: 'testvpc',
+    cidr: '172.16.0.0/16',
+  });
+
+  Template.fromStack(stack);
+  //template.resourceCountIs('AWS::Lambda::Function', 1);
+  expect(testvpc.vpc).toBeInstanceOf(Vpc);
+});
 
 /*
 describe('fail test', () => {
