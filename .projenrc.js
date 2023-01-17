@@ -50,5 +50,6 @@ project.gitpod.addVscodeExtensions(
   'AmazonWebServices.aws-toolkit-vscode',
 );
 
+project.compileTask.exec('npm install --prefix assets/lambda-layers/aws-sdk-3-layer/nodejs ');
 
 project.synth();

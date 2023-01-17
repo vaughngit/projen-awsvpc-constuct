@@ -1,5 +1,5 @@
 {
-  "name": "projen-awsvpc-constuct",
+  "name": "vt-vpc-construct",
   "repository": {
     "type": "git",
     "url": "https://github.com/vaughngit/projen-awsvpc-constuct.git"
@@ -16,7 +16,6 @@
     "eslint": "npx projen eslint",
     "package": "npx projen package",
     "package-all": "npx projen package-all",
-    "package:js": "npx projen package:js",
     "post-compile": "npx projen post-compile",
     "post-upgrade": "npx projen post-upgrade",
     "pre-compile": "npx projen pre-compile",
@@ -38,7 +37,7 @@
     "@types/node": "^14",
     "@typescript-eslint/eslint-plugin": "^5",
     "@typescript-eslint/parser": "^5",
-    "aws-cdk-lib": "2.1.0",
+    "aws-cdk-lib": "2.60.0",
     "constructs": "10.0.5",
     "eslint": "^8",
     "eslint-import-resolver-node": "^0.3.6",
@@ -58,7 +57,7 @@
     "typescript": "^4.9.4"
   },
   "peerDependencies": {
-    "aws-cdk-lib": "^2.1.0",
+    "aws-cdk-lib": "^2.60.0",
     "constructs": "^10.0.5"
   },
   "keywords": [

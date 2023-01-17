@@ -19,10 +19,15 @@ export interface IstackProps {
    * @default '172.16.0.0/16'
    */
   cidr: string
+
+  /**vpc name 
+   * @default solutionName
+  */
+  name: string; 
 }
 
 
-export class VpcConstruct extends Construct  {
+export class VTVpc extends Construct  {
 
     /** API construct */
     public readonly vpc: ec2.Vpc;
@@ -36,9 +41,8 @@ export class VpcConstruct extends Construct  {
 
 
   // Create new VPC
-  const vpc = new ec2.Vpc(this, `createNewVPC`, { 
-    //vpcName: props.solutionName,
-    
+  const constructVpc = new ec2.Vpc(this, `${props.solutionName}-VPC`, { 
+    vpcName: props.solutionName,
     natGatewayProvider: natGatewayProvider,
     maxAzs: 3,
     cidr: props.cidr,
@@ -109,7 +113,7 @@ export class VpcConstruct extends Construct  {
    */
     //EC2 Security Group 
     const ec2SG = new ec2.SecurityGroup(this, `EC2-SG`, { 
-        vpc,
+        vpc: constructVpc,
         description: `${props.solutionName} EC2 ${props.environment} SecurityGroup`,
         securityGroupName: `${props.solutionName}-EC2-${props.environment}-SG`,  
     });
@@ -126,7 +130,7 @@ export class VpcConstruct extends Construct  {
     });
  */
     // S3 Gateway Endpoint 
-    const s3GatewayEndpoint = vpc.addGatewayEndpoint('s3GatewayEndpoint', {
+    constructVpc.addGatewayEndpoint('s3GatewayEndpoint', {
         service: ec2.GatewayVpcEndpointAwsService.S3,
         // Add only to ISOLATED subnets
         subnets: [
@@ -136,7 +140,7 @@ export class VpcConstruct extends Construct  {
     });
 
     // DynamoDb Gateway endpoint
-    const dynamoDbEndpoint = vpc.addGatewayEndpoint('DynamoDbEndpoint', {
+    constructVpc.addGatewayEndpoint('DynamoDbEndpoint', {
         service: ec2.GatewayVpcEndpointAwsService.DYNAMODB,
         // Add only to ISOLATED subnets
         subnets: [
@@ -146,7 +150,7 @@ export class VpcConstruct extends Construct  {
     });
 
     // Add an interface endpoint
-    vpc.addInterfaceEndpoint('SystemsManagerEndpoint', {
+    constructVpc.addInterfaceEndpoint('SystemsManagerEndpoint', {
         service: ec2.InterfaceVpcEndpointAwsService.SSM,
         // Uncomment the following to allow more fine-grained control over
         // who can access the endpoint via the '.connections' object.
@@ -158,7 +162,7 @@ export class VpcConstruct extends Construct  {
     
 
     // CloudWatch interface endpoint
-    vpc.addInterfaceEndpoint('CloudWatchEndpoint', {
+    constructVpc.addInterfaceEndpoint('CloudWatchEndpoint', {
     service: ec2.InterfaceVpcEndpointAwsService.CLOUDWATCH,
     // Uncomment the following to allow more fine-grained control over
     // who can access the endpoint via the '.connections' object.
@@ -169,7 +173,7 @@ export class VpcConstruct extends Construct  {
     });
 
     // CW Events interface endpoint
-    vpc.addInterfaceEndpoint('CloudWatch_Events_Endpoint', {
+    constructVpc.addInterfaceEndpoint('CloudWatch_Events_Endpoint', {
     service: ec2.InterfaceVpcEndpointAwsService.CLOUDWATCH_EVENTS,
     // Uncomment the following to allow more fine-grained control over
     // who can access the endpoint via the '.connections' object.
@@ -180,7 +184,7 @@ export class VpcConstruct extends Construct  {
     });
 
     // CW Logs interface endpoint
-    vpc.addInterfaceEndpoint('CloudWatch_Logs_Endpoint', {
+    constructVpc.addInterfaceEndpoint('CloudWatch_Logs_Endpoint', {
     service: ec2.InterfaceVpcEndpointAwsService.CLOUDWATCH_LOGS,
     // Uncomment the following to allow more fine-grained control over
     // who can access the endpoint via the '.connections' object.
@@ -191,7 +195,7 @@ export class VpcConstruct extends Construct  {
     });
 
     // ECR interface endpoint
-    vpc.addInterfaceEndpoint('EcrDockerEndpoint', {
+    constructVpc.addInterfaceEndpoint('EcrDockerEndpoint', {
       service: ec2.InterfaceVpcEndpointAwsService.ECR_DOCKER,
       // Uncomment the following to allow more fine-grained control over
       // who can access the endpoint via the '.connections' object.
@@ -202,7 +206,7 @@ export class VpcConstruct extends Construct  {
     });
 
     // EFS interface endpoint
-    vpc.addInterfaceEndpoint('EFSEndpoint', {
+    constructVpc.addInterfaceEndpoint('EFSEndpoint', {
       service: ec2.InterfaceVpcEndpointAwsService.ELASTIC_FILESYSTEM,
       // Uncomment the following to allow more fine-grained control over
       // who can access the endpoint via the '.connections' object.
@@ -254,7 +258,7 @@ export class VpcConstruct extends Construct  {
     destination: ec2.FlowLogDestination.toCloudWatchLogs(logGroup, vpcFlowlogsRole)
   }); */
 
-  this.vpc = vpc
+  this.vpc = constructVpc
 
   const sdk3layer = new lambda.LayerVersion(this, 'HelperLayer', {
     code: lambda.Code.fromAsset('assets/lambda-layers/aws-sdk-3-layer'),
@@ -266,7 +270,7 @@ export class VpcConstruct extends Construct  {
 
   const crLambda = new NodejsFunction(this, "customResourceFunction", {
     functionName: `${props.solutionName}-update-infrastructure-${props.environment}`,
-    entry: path.join(__dirname, `/../assets/customResourceLambda/index.ts`),
+    entry: path.join(__dirname, `/../../assets/customResourceLambda/index.ts`),
     runtime: lambda.Runtime.NODEJS_14_X,
     handler: 'handler',
     timeout: Duration.minutes(10),
@@ -297,7 +301,7 @@ export class VpcConstruct extends Construct  {
     serviceToken: provider.serviceToken,
     properties: {
       natGateways: natGatewayProvider.configuredGateways,
-      vpcId: vpc.vpcId,
+      vpcId: constructVpc.vpcId,
       tags:[ {Key: "environment", Value: props.environment}, {Key: "solution", Value: props.solutionName},{Key: "costcenter", Value: props.costcenter}    ]
       
     },
@@ -312,21 +316,21 @@ export class VpcConstruct extends Construct  {
   //Tags.of(this).add("ShutdownPolicy", "NoShutdown")
 
 
-  new CfnOutput(this, 'VPCId', { value: vpc.vpcId, exportName: `${props.solutionName}:${props.environment}:VPCID:${parent.region}`} );
+  new CfnOutput(this, 'VPCId', { value: constructVpc.vpcId, exportName: `${props.solutionName}:${props.environment}:VPCID:${parent.region}`} );
 
  //new CfnOutput(this, 'NatGateways', { value: natGatewayProvider.configuredGateways.toString()} );
 
-  new CfnOutput(this, 'VPCCIDR', { value: vpc.vpcCidrBlock, exportName: `${props.solutionName}:VpcCIDR`} );
+  new CfnOutput(this, 'VPCCIDR', { value: constructVpc.vpcCidrBlock, exportName: `${props.solutionName}:VpcCIDR`} );
 
-  new CfnOutput(this, 'VPCPrivateSubnet0', { value: vpc.privateSubnets[0].subnetId, exportName: `${props.solutionName}:PrivateSubnet0`} );
+  new CfnOutput(this, 'VPCPrivateSubnet0', { value: constructVpc.privateSubnets[0].subnetId, exportName: `${props.solutionName}:PrivateSubnet0`} );
   
-  new CfnOutput(this, 'VPCPrivateSubnet1', { value: vpc.privateSubnets[1].subnetId, exportName: `${props.solutionName}:PrivateSubnet1`} );
+  new CfnOutput(this, 'VPCPrivateSubnet1', { value: constructVpc.privateSubnets[1].subnetId, exportName: `${props.solutionName}:PrivateSubnet1`} );
 
-  new CfnOutput(this, 'VPCPrivateSubnet2', { value: vpc.privateSubnets[2].subnetId, exportName: `${props.solutionName}:PrivateSubnet2`} );
+  new CfnOutput(this, 'VPCPrivateSubnet2', { value: constructVpc.privateSubnets[2].subnetId, exportName: `${props.solutionName}:PrivateSubnet2`} );
 
-  new CfnOutput(this, 'VPCPrivateSubnet0-AZ', { value: vpc.privateSubnets[0].availabilityZone} );
+  new CfnOutput(this, 'VPCPrivateSubnet0-AZ', { value: constructVpc.privateSubnets[0].availabilityZone} );
   
-  new CfnOutput(this, 'VPCPrivateSubnet1-AZ', { value: vpc.privateSubnets[1].availabilityZone });
+  new CfnOutput(this, 'VPCPrivateSubnet1-AZ', { value: constructVpc.privateSubnets[1].availabilityZone });
 
   new CfnOutput(this, 'EC2SecurityGroup', { value: ec2SG.securityGroupId, exportName: `${props.solutionName}:EC2SecurityGroup`} );
 
