@@ -91,6 +91,9 @@
         },
         {
           "exec": "npm install --prefix assets/lambda-layers/aws-sdk-3-layer/nodejs "
+        },
+        {
+          "exec": "esbuild assets/customResourceLambda/index.ts --bundle --platform=node --target=node16 --external:aws-sdk --outfile=lib/assets/customResourceLambda/index.js"
         }
       ]
     },

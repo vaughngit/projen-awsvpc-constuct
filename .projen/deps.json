@@ -31,6 +31,10 @@
       "type": "build"
     },
     {
+      "name": "esbuild",
+      "type": "build"
+    },
+    {
       "name": "eslint-import-resolver-node",
       "type": "build"
     },
@@ -99,6 +103,18 @@
     {
       "name": "typescript",
       "type": "build"
+    },
+    {
+      "name": "@aws-sdk/client-ec2",
+      "type": "bundled"
+    },
+    {
+      "name": "@aws-sdk/client-iam",
+      "type": "bundled"
+    },
+    {
+      "name": "aws-sdk",
+      "type": "bundled"
     },
     {
       "name": "@types/babel__traverse",

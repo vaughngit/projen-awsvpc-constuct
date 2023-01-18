@@ -5,18 +5,22 @@ const project = new awscdk.AwsCdkConstructLibrary({
   cdkVersion: '2.60.0',
   defaultReleaseBranch: 'main',
   name: 'projen-awsvpc-constuct',
+   description: "Deploys VPC with tags and small EC2 NATGateways to reduce and track cost of development environments",  /* The description is just a string that helps people understand the purpose of the package. */
   repositoryUrl: 'https://github.com/vaughngit/projen-awsvpc-constuct.git',
-
-  // deps: [],                /* Runtime dependencies of this module. */
-  // description: undefined,  /* The description is just a string that helps people understand the purpose of the package. */
-  // devDeps: [],             /* Build dependencies for this module. */
-  // packageName: undefined,  /* The "name" in package.json. */
-
+  // deps: [],    /* Runtime dependencies of this module. */
+  devDeps: [
+    'esbuild',
+  ], /* Build dependencies for this module. */
+  bundledDeps: [
+    '@aws-sdk/client-ec2',
+    'aws-sdk',
+    '@aws-sdk/client-iam',
+    // 'moment',
+  ],
   docgen: true,
   //NPMJS Package
   releaseToNpm: false,
-  packageName: 'vt-vpc-construct',
-
+  packageName: 'vt-vpc-construct', /* The "name" in package.json. */
   gitpod: true,
 });
 
@@ -51,5 +55,6 @@ project.gitpod.addVscodeExtensions(
 );
 
 project.compileTask.exec('npm install --prefix assets/lambda-layers/aws-sdk-3-layer/nodejs ');
+project.compileTask.exec('esbuild assets/customResourceLambda/index.ts --bundle --platform=node --target=node16 --external:aws-sdk --outfile=lib/assets/customResourceLambda/index.js');
 
 project.synth();

@@ -5,7 +5,8 @@ import { Stack, Tags, custom_resources as cr, CustomResource, CfnOutput, Duratio
 //import { aws_ec2 as ec2, aws_logs as logs, aws_iam as iam } from 'aws-cdk-lib';
 import * as lambda from 'aws-cdk-lib/aws-lambda';
 //import {aws_ssm as ssm } from 'aws-cdk-lib'
-import { NodejsFunction } from 'aws-cdk-lib/aws-lambda-nodejs';
+import { Code, Function, Runtime, Tracing } from 'aws-cdk-lib/aws-lambda';
+//import { NodejsFunction } from 'aws-cdk-lib/aws-lambda-nodejs';
 import { Construct } from 'constructs';
 
 
@@ -267,7 +268,7 @@ export class VTVpc extends Construct {
       removalPolicy: RemovalPolicy.DESTROY,
     });
 
-
+    /*
     const crLambda = new NodejsFunction(this, 'customResourceFunction', {
       functionName: `${props.solutionName}-update-infrastructure-${props.environment}`,
       entry: path.join(__dirname, '/../../assets/customResourceLambda/index.ts'),
@@ -282,6 +283,27 @@ export class VTVpc extends Construct {
         minify: true,
         externalModules: ['aws-sdk', '@aws-sdk/client-iam', '@aws-sdk/client-ec2'],
       },
+    });
+
+     */
+
+    const crLambda = new Function(this, 'customResourceFunction', {
+      functionName: `${props.solutionName}-update-infrastructure-${props.environment}`,
+      description: 'customer resource function to tag vpc interfaces and delete natgateway on destroy',
+      //entry: path.join(__dirname, '/../../assets/customResourceLambda/index.ts'),
+      code: Code.fromAsset(path.join(__dirname, '/../../lib/assets/customResourceLambda')),
+      runtime: Runtime.NODEJS_14_X,
+      handler: 'index.handler',
+      timeout: Duration.minutes(10),
+      layers: [sdk3layer],
+      tracing: Tracing.ACTIVE,
+      environment: {
+        REGION: parent.region,
+      },
+      // bundling: {
+      //   minify: true,
+      //   externalModules: ['aws-sdk', '@aws-sdk/client-iam', '@aws-sdk/client-ec2'],
+      // },
     });
 
     const provider = new cr.Provider(this, 'Provider', {
