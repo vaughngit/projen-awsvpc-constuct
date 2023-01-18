@@ -17,7 +17,7 @@ export interface IstackProps {
    * vpc cidr
    * @default '172.16.0.0/16'
    */
-  cidr: string;
+  cidr?: string;
 
   /**vpc name
    * @default solutionName
@@ -45,7 +45,7 @@ export class VTVpc extends Construct {
       natGatewayProvider: natGatewayProvider,
       maxAzs: 3,
       //cidr: props.cidr,
-      ipAddresses: ec2.IpAddresses.cidr(props.cidr),
+      ipAddresses: props&& props.cidr ? ec2.IpAddresses.cidr(props.cidr) : ec2.IpAddresses.cidr('172.16.0.0/16'),
       natGateways: 2,
       enableDnsHostnames: true,
       enableDnsSupport: true,
