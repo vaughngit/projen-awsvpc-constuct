@@ -5,7 +5,7 @@ const project = new awscdk.AwsCdkConstructLibrary({
   cdkVersion: '2.60.0',
   defaultReleaseBranch: 'main',
   name: 'projen-awsvpc-constuct',
-   description: "Deploys VPC with tags and small EC2 NATGateways to reduce and track cost of development environments",  /* The description is just a string that helps people understand the purpose of the package. */
+  description: 'Deploys VPC with tags and small EC2 NATGateways to reduce and track cost of development environments', /* The description is just a string that helps people understand the purpose of the package. */
   repositoryUrl: 'https://github.com/vaughngit/projen-awsvpc-constuct.git',
   // deps: [],    /* Runtime dependencies of this module. */
   devDeps: [
