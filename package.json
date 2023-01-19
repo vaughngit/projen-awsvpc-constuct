@@ -29,8 +29,8 @@
     "projen": "npx projen"
   },
   "author": {
-    "name": "awsalvin",
-    "email": "awsalvin@amazon.com",
+    "name": "VaughnTech",
+    "email": "alvin.vaughn@outlook.com",
     "organization": false
   },
   "devDependencies": {

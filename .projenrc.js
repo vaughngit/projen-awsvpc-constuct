@@ -1,7 +1,8 @@
 const { awscdk } = require('projen');
 const project = new awscdk.AwsCdkConstructLibrary({
-  author: 'awsalvin',
-  authorAddress: 'awsalvin@amazon.com',
+  author: 'VaughnTech',
+  authorAddress: 'alvin.vaughn@outlook.com',
+  license: 'Apache-2.0',
   cdkVersion: '2.60.0',
   defaultReleaseBranch: 'main',
   name: 'projen-awsvpc-constuct',
@@ -17,15 +18,29 @@ const project = new awscdk.AwsCdkConstructLibrary({
     '@aws-sdk/client-iam',
     // 'moment',
   ],
+  //majorVersion: 1,
+  autoApproveUpgrades: true,
+  // dependabot: true,
+  autoApproveOptions: {
+    allowedUsernames: ['github-bot', 'vaughngit', 'github-actions'],
+  },
   docgen: true,
   //NPMJS Package
   releaseToNpm: false,
   packageName: 'vt-vpc-construct', /* The "name" in package.json. */
+  // publishToNuget: {
+  //   dotNetNamespace: 'VaughnTech.CDK',
+  //   packageId: 'VaughnTech.CDK.secures3bucket',
+  // },
+  // publishToPypi: {
+  //   distName: 'vaughntech.cdk-secure-bucket',
+  //   module: 'vaughntech_cdk_secure_bucket',
+  // },
   gitpod: true,
 });
 
 project.gitignore.addPatterns('cdk.out');
-project.npmignore.addPatterns('cdk.out', 'examples', 'gitpod_scripts');
+project.npmignore.addPatterns('cdk.out', 'examples', 'gitpod_scripts', 'misc', 'test');
 
 
 project.gitpod.addCustomTask({
@@ -55,6 +70,6 @@ project.gitpod.addVscodeExtensions(
 );
 
 project.compileTask.exec('npm install --prefix assets/lambda-layers/aws-sdk-3-layer/nodejs ');
-project.compileTask.exec('esbuild assets/customResourceLambda/index.ts --bundle --platform=node --target=node16 --external:aws-sdk --outfile=lib/assets/customResourceLambda/index.js');
+project.compileTask.exec('esbuild assets/customResourceLambda/index.ts --bundle --platform=node --target=node16 --external:aws-sdk --external:@aws-sdk/client-ec2 --external:@aws-sdk/client-iam --outfile=lib/assets/customResourceLambda/index.js');
 
 project.synth();

@@ -25,3 +25,5 @@ tsconfig.tsbuildinfo
 cdk.out
 examples
 gitpod_scripts
+misc
+test
