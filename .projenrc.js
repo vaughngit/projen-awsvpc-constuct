@@ -28,16 +28,16 @@ const project = new awscdk.AwsCdkConstructLibrary({
   ],
   //majorVersion: 1,
   //NPMJS Package
-  releaseToNpm: false,
+  releaseToNpm: true,
   packageName: 'vt-vpc-construct', /* The "name" in package.json. */
-  // publishToNuget: {
-  //   dotNetNamespace: 'VaughnTech.CDK',
-  //   packageId: 'VaughnTech.CDK.secures3bucket',
-  // },
-  // publishToPypi: {
-  //   distName: 'vaughntech.cdk-secure-bucket',
-  //   module: 'vaughntech_cdk_secure_bucket',
-  // },
+  publishToNuget: {
+    dotNetNamespace: 'vt.cdk',
+    packageId: 'vt.cdk.vpcConstruct',
+  },
+  publishToPypi: {
+    distName: 'vt.cdk-vpc-constuct',
+    module: 'vt_cdk_vpc_construct',
+  },
   gitpod: true,
 });
 
