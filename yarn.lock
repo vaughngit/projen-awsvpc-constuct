@@ -1686,12 +1686,12 @@
   integrity sha512-XCuKFP5PS55gnMVu3dty8KPatLqUoy/ZYzDzAGCQ8JNFCkLXzmI7vNHCR+XpbZaMWQK/vQubr7PkYq8g470J/A==
 
 "@types/babel__core@^7.0.0", "@types/babel__core@^7.1.14":
-  version "7.1.20"
-  resolved "https://registry.yarnpkg.com/@types/babel__core/-/babel__core-7.1.20.tgz#e168cdd612c92a2d335029ed62ac94c95b362359"
-  integrity sha512-PVb6Bg2QuscZ30FvOU7z4guG6c926D9YRvOxEaelzndpMsvP+YM74Q/dAFASpg2l6+XLalxSGxcq/lrgYWZtyQ==
+  version "7.20.0"
+  resolved "https://registry.yarnpkg.com/@types/babel__core/-/babel__core-7.20.0.tgz#61bc5a4cae505ce98e1e36c5445e4bee060d8891"
+  integrity sha512-+n8dL/9GWblDO0iU6eZAwEIJVr5DWigtle+Q6HLOrh/pdbXOhOtqzq8VPPE2zvNJzSKY4vH/z3iT3tn0A3ypiQ==
   dependencies:
-    "@babel/parser" "^7.1.0"
-    "@babel/types" "^7.0.0"
+    "@babel/parser" "^7.20.7"
+    "@babel/types" "^7.20.7"
     "@types/babel__generator" "*"
     "@types/babel__template" "*"
     "@types/babel__traverse" "*"
@@ -5006,10 +5006,10 @@ jsii-diff@^1.73.0:
     log4js "^6.7.1"
     yargs "^16.2.0"
 
-jsii-docgen@^7.0.207:
-  version "7.0.207"
-  resolved "https://registry.yarnpkg.com/jsii-docgen/-/jsii-docgen-7.0.207.tgz#38cf1ecf62c198040aeacfdc1049d47f26cc5fd3"
-  integrity sha512-WrJ+j9qYssdiyxuy3NcGaytdeyPKh9s/k3GSam8kc2v62/3R/xYgS3Qv/bOTv4/6pmoB6c9J5TaGp81E4/eQGw==
+jsii-docgen@^7.0.208:
+  version "7.0.208"
+  resolved "https://registry.yarnpkg.com/jsii-docgen/-/jsii-docgen-7.0.208.tgz#1ae6f812c22d30bf8b337dc111378c1c16efbbf6"
+  integrity sha512-54d9yke4AmI3qPRRwRdzuEubhntwN2qjfRAlKUDgIgtr3yKMyfNJuXsKGF+j6JyydcT4YP83UJ/8V9cv7mWK5w==
   dependencies:
     "@jsii/spec" "^1.73.0"
     case "^1.6.3"
@@ -6138,10 +6138,10 @@ progress@^2.0.3:
   resolved "https://registry.yarnpkg.com/progress/-/progress-2.0.3.tgz#7e8cf8d8f5b8f239c1bc68beb4eb78567d572ef8"
   integrity sha512-7PiHtLll5LdnKIMw100I+8xJXR5gW2QwWYkT6iJva0bXitZKa/XMrSbdmg3r2Xnaidz9Qumd0VPaMrZlF9V9sA==
 
-projen@^0.67.5:
-  version "0.67.5"
-  resolved "https://registry.yarnpkg.com/projen/-/projen-0.67.5.tgz#f956f2568aef5efecccf33f7d8dbe46e683571a2"
-  integrity sha512-kjZO21gq+lxYTzjlyQR9ssa6xJpyYRQim/4BSpWjVZrf5D46uJfKtszsuER7OKUs+D/koshBkjwDCx+79uCmyA==
+projen@^0.67.6:
+  version "0.67.6"
+  resolved "https://registry.yarnpkg.com/projen/-/projen-0.67.6.tgz#4a415b9fbf4cc99fd13b5e3fae005adeeacc7583"
+  integrity sha512-xY8SGIjlEoFvP4cppo3cj2npCJRG4L/OnbRQcZ1xO8XhVxYhlDRcvq/NOhaQyfMIyDVoJFbyejwDLA5cPQV7Hw==
   dependencies:
     "@iarna/toml" "^2.2.5"
     case "^1.6.3"
