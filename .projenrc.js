@@ -3,6 +3,14 @@ const project = new awscdk.AwsCdkConstructLibrary({
   author: 'VaughnTech',
   authorAddress: 'alvin.vaughn@outlook.com',
   license: 'Apache-2.0',
+  eslint: true,
+  workflowNodeVersion: '16.19.0',
+  autoApproveUpgrades: true,
+  // dependabot: true,
+  autoApproveOptions: {
+    allowedUsernames: ['github-bot', 'vaughngit', 'github-actions'],
+  },
+  docgen: true,
   cdkVersion: '2.60.0',
   defaultReleaseBranch: 'main',
   name: 'projen-awsvpc-constuct',
@@ -19,12 +27,6 @@ const project = new awscdk.AwsCdkConstructLibrary({
     // 'moment',
   ],
   //majorVersion: 1,
-  autoApproveUpgrades: true,
-  // dependabot: true,
-  autoApproveOptions: {
-    allowedUsernames: ['github-bot', 'vaughngit', 'github-actions'],
-  },
-  docgen: true,
   //NPMJS Package
   releaseToNpm: false,
   packageName: 'vt-vpc-construct', /* The "name" in package.json. */

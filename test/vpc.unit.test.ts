@@ -3,7 +3,7 @@ import { App, Stack } from 'aws-cdk-lib';
 //import { Match, Template } from 'aws-cdk-lib/assertions';
 import { Match, Template } from 'aws-cdk-lib/assertions';
 import { Vpc } from 'aws-cdk-lib/aws-ec2';
-import { VTVpc } from '../src/vpc';
+import { VTVpc } from '../src';
 
 
 test('vpc unit test', () => {

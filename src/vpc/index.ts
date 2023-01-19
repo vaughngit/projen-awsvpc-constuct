@@ -10,7 +10,7 @@ import { Code, Function, Runtime, Tracing } from 'aws-cdk-lib/aws-lambda';
 import { Construct } from 'constructs';
 
 
-export interface IstackProps {
+export interface IStackProps {
   environment: string;
   solutionName: string;
   costcenter: string;
@@ -32,7 +32,7 @@ export class VTVpc extends Construct {
   /** API construct */
   public readonly vpc: ec2.Vpc;
 
-  constructor(parent: Stack, id: string, props: IstackProps) {
+  constructor(parent: Stack, id: string, props: IStackProps) {
     super(parent, id);
 
     const natGatewayProvider = ec2.NatProvider.instance({

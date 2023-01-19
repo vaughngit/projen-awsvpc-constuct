@@ -1,7 +1,7 @@
 //import path from 'path';
 //import { RemovalPolicy, Stack, Tags, CfnOutput, Fn } from 'aws-cdk-lib';
 import { App, Stack, Tags } from 'aws-cdk-lib';
-import { VTVpc } from '../vpc';
+import { VTVpc } from '../index';
 
 
 // import * as iam from 'aws-cdk-lib/aws-iam';
