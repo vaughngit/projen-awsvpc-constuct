@@ -3,7 +3,7 @@ import * as path from 'path';
 //import { RemovalPolicy, Stack, StackProps, Tags, custom_resources as cr, CustomResource, CfnOutput, Duration, } from 'aws-cdk-lib';
 import { Stack, Tags, custom_resources as cr, CustomResource, CfnOutput, Duration, RemovalPolicy, aws_ec2 as ec2, aws_logs as logs, aws_iam as iam } from 'aws-cdk-lib';
 //import { aws_ec2 as ec2, aws_logs as logs, aws_iam as iam } from 'aws-cdk-lib';
-import * as lambda from 'aws-cdk-lib/aws-lambda';
+//import * as lambda from 'aws-cdk-lib/aws-lambda';
 //import {aws_ssm as ssm } from 'aws-cdk-lib'
 import { Code, Function, Runtime, Tracing } from 'aws-cdk-lib/aws-lambda';
 //import { NodejsFunction } from 'aws-cdk-lib/aws-lambda-nodejs';
@@ -261,23 +261,23 @@ export class VTVpc extends Construct {
 
     this.vpc = constructVpc;
 
-    const sdk3layer = new lambda.LayerVersion(this, 'HelperLayer', {
-      // code: lambda.Code.fromAsset('assets/lambda-layers/aws-sdk-3-layer'),
-      code: Code.fromAsset(path.join(__dirname, '/../../assets/lambda-layers/aws-sdk-3-layer'), {
-      //    bundling: {
-        //   command: [
-        //     "bash",
-        //     "-c",
-        //     "npm install && npm run build && cp -rT /asset-input/dist/ /asset-output/",
-        //   ],
-        //   image: lambda.Runtime.NODEJS_14_X.bundlingImage,
-        //   user: "root",
-        //  },
-      }),
-      description: 'AWS JS SDK v3',
-      compatibleRuntimes: [lambda.Runtime.NODEJS_14_X, lambda.Runtime.NODEJS_16_X],
-      removalPolicy: RemovalPolicy.DESTROY,
-    });
+    // const sdk3layer = new lambda.LayerVersion(this, 'HelperLayer', {
+    //   // code: lambda.Code.fromAsset('assets/lambda-layers/aws-sdk-3-layer'),
+    //   code: Code.fromAsset(path.join(__dirname, '/../../assets/lambda-layers/aws-sdk-3-layer'), {
+    //   //    bundling: {
+    //     //   command: [
+    //     //     "bash",
+    //     //     "-c",
+    //     //     "npm install && npm run build && cp -rT /asset-input/dist/ /asset-output/",
+    //     //   ],
+    //     //   image: lambda.Runtime.NODEJS_14_X.bundlingImage,
+    //     //   user: "root",
+    //     //  },
+    //   }),
+    //   description: 'AWS JS SDK v3',
+    //   compatibleRuntimes: [lambda.Runtime.NODEJS_14_X, lambda.Runtime.NODEJS_16_X],
+    //   removalPolicy: RemovalPolicy.DESTROY,
+    // });
 
     /*
     const crLambda = new NodejsFunction(this, 'customResourceFunction', {
@@ -316,7 +316,7 @@ export class VTVpc extends Construct {
       runtime: Runtime.NODEJS_14_X,
       handler: 'index.handler',
       timeout: Duration.minutes(10),
-      layers: [sdk3layer],
+      //layers: [sdk3layer],
       tracing: Tracing.ACTIVE,
       environment: {
         REGION: parent.region,
