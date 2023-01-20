@@ -31,8 +31,8 @@ const project = new awscdk.AwsCdkConstructLibrary({
   releaseToNpm: true,
   packageName: 'vt-vpc-construct', /* The "name" in package.json. */
   publishToNuget: {
-    dotNetNamespace: 'vt.cdk',
-    packageId: 'vt.cdk.vpcConstruct',
+    dotNetNamespace: 'Vaughntech.cdk',
+    packageId: 'vt.vpcConstruct',
   },
   publishToPypi: {
     distName: 'vt.cdk-vpc-constuct',
