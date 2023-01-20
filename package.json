@@ -131,8 +131,8 @@
         "module": "vt_cdk_vpc_construct"
       },
       "dotnet": {
-        "namespace": "vt.cdk",
-        "packageId": "vt.cdk.vpcConstruct"
+        "namespace": "Vaughntech.cdk",
+        "packageId": "vt.vpcConstruct"
       }
     },
     "tsc": {
