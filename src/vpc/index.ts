@@ -262,7 +262,18 @@ export class VTVpc extends Construct {
     this.vpc = constructVpc;
 
     const sdk3layer = new lambda.LayerVersion(this, 'HelperLayer', {
-      code: lambda.Code.fromAsset('assets/lambda-layers/aws-sdk-3-layer'),
+      // code: lambda.Code.fromAsset('assets/lambda-layers/aws-sdk-3-layer'),
+      code: Code.fromAsset(path.join(__dirname, '/../../assets/lambda-layers/aws-sdk-3-layer'), {
+      //    bundling: {
+        //   command: [
+        //     "bash",
+        //     "-c",
+        //     "npm install && npm run build && cp -rT /asset-input/dist/ /asset-output/",
+        //   ],
+        //   image: lambda.Runtime.NODEJS_14_X.bundlingImage,
+        //   user: "root",
+        //  },
+      }),
       description: 'AWS JS SDK v3',
       compatibleRuntimes: [lambda.Runtime.NODEJS_14_X, lambda.Runtime.NODEJS_16_X],
       removalPolicy: RemovalPolicy.DESTROY,
@@ -291,7 +302,17 @@ export class VTVpc extends Construct {
       functionName: `${props.solutionName}-update-infrastructure-${props.environment}`,
       description: 'customer resource function to tag vpc interfaces and delete natgateway on destroy',
       //entry: path.join(__dirname, '/../../assets/customResourceLambda/index.ts'),
-      code: Code.fromAsset(path.join(__dirname, '/../../lib/assets/customResourceLambda')),
+      code: Code.fromAsset(path.join(__dirname, '/../../lib/assets/customResourceLambda'), {
+        //  bundling: {
+        //   command: [
+        //     "bash",
+        //     "-c",
+        //     "npm install && npm run build && cp -rT /asset-input/dist/ /asset-output/",
+        //   ],
+        //   image: lambda.Runtime.NODEJS_14_X.bundlingImage,
+        //   user: "root",
+        // },
+      }),
       runtime: Runtime.NODEJS_14_X,
       handler: 'index.handler',
       timeout: Duration.minutes(10),
@@ -300,10 +321,6 @@ export class VTVpc extends Construct {
       environment: {
         REGION: parent.region,
       },
-      // bundling: {
-      //   minify: true,
-      //   externalModules: ['aws-sdk', '@aws-sdk/client-iam', '@aws-sdk/client-ec2'],
-      // },
     });
 
     const provider = new cr.Provider(this, 'Provider', {
