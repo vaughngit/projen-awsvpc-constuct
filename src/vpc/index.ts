@@ -309,7 +309,7 @@ export class VTVpc extends Construct {
         //     "-c",
         //     "npm install && npm run build && cp -rT /asset-input/dist/ /asset-output/",
         //   ],
-        //   image: lambda.Runtime.NODEJS_14_X.bundlingImage,
+        //   image: Runtime.NODEJS_14_X.bundlingImage,
         //   user: "root",
         // },
       }),

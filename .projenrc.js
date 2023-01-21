@@ -73,7 +73,7 @@ project.gitpod.addVscodeExtensions(
 
 //project.compileTask.exec('npm install --prefix assets/lambda-layers/aws-sdk-3-layer/nodejs ');
 project.compileTask.exec('npm install --prefix assets/customResourceLambda');
-project.compileTask.exec('esbuild assets/customResourceLambda/index.ts --bundle --platform=node --target=node16 --external:aws-sdk --external:@aws-sdk/client-ec2 --external:@aws-sdk/client-iam --outfile=lib/assets/customResourceLambda/index.js');
 //project.compileTask.exec('cp assets/customResourceLambda/package.json lib/assets/customResourceLambda/');
+project.compileTask.exec('esbuild assets/customResourceLambda/index.ts --bundle --platform=node --target=node16 --external:aws-sdk --external:@aws-sdk/client-ec2 --external:@aws-sdk/client-iam --outfile=lib/assets/customResourceLambda/index.js');
 //project.compileTask.exec('npm install --prefix lib/assets/customResourceLambda');
 project.synth();

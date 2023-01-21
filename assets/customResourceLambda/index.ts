@@ -1,7 +1,8 @@
 //import * as AWS from "aws-sdk";
+import { CdkCustomResourceEvent,  CdkCustomResourceHandler,  CdkCustomResourceResponse} from "aws-lambda";
 import { IAMClient, DeleteRoleCommand, RemoveRoleFromInstanceProfileCommand, DetachRolePolicyCommand, GetInstanceProfileCommand } from "@aws-sdk/client-iam"; //sdk v3 lib 
 import { EC2Client,  DescribeInstancesCommand, DescribeVpcEndpointsCommand, CreateTagsCommand } from "@aws-sdk/client-ec2";
-import { CdkCustomResourceEvent,  CdkCustomResourceHandler,  CdkCustomResourceResponse} from "aws-lambda";
+
 //import { request } from "http";
 
 const iamClient = new IAMClient({ region: process.env.REGION });
