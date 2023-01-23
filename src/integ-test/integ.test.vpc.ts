@@ -7,8 +7,8 @@ import { VTVpc } from '../index';
 // import * as iam from 'aws-cdk-lib/aws-iam';
 
 
-const aws_region = 'us-east-2';
-const solution = 'VPCConstructIntegTest';
+const aws_region = 'us-east-1';
+const solution = 'IntegtestVPC';
 const environment = 'dev';
 const costcenter = 'tnc';
 
@@ -40,9 +40,9 @@ export class IntegTesting {
 
 
     new VTVpc(stack, 'VTVpcConstruct', {
-      solutionName: 'UnitestVPC',
-      costcenter: 'tnc',
-      environment: 'test',
+      solutionName: solution,
+      costcenter: costcenter,
+      environment: environment,
       name: 'testvpc',
       // cidr: '172.16.0.0/16',
     });
