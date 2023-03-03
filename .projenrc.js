@@ -11,7 +11,7 @@ const project = new awscdk.AwsCdkConstructLibrary({
     allowedUsernames: ['github-bot', 'vaughngit', 'github-actions'],
   },
   docgen: true,
-  cdkVersion: '2.60.0',
+  cdkVersion: '2.61.1',
   defaultReleaseBranch: 'main',
   name: 'projen-awsvpc-constuct',
   description: 'Deploys VPC with tags and small EC2 NATGateways to reduce and track cost of development environments', /* The description is just a string that helps people understand the purpose of the package. */
@@ -19,6 +19,7 @@ const project = new awscdk.AwsCdkConstructLibrary({
   // deps: [],    /* Runtime dependencies of this module. */
   devDeps: [
     'esbuild',
+    '@types/aws-lambda'
   ], /* Build dependencies for this module. */
   bundledDeps: [
     '@aws-sdk/client-ec2',
@@ -72,9 +73,9 @@ project.gitpod.addVscodeExtensions(
 );
 
 //project.compileTask.exec('npm install --prefix assets/lambda-layers/aws-sdk-3-layer/nodejs ');
-project.compileTask.exec('npm install --prefix assets/customResourceLambda');
+//project.compileTask.exec('npm install --prefix assets/customResourceLambda');
 //project.compileTask.exec('cp assets/customResourceLambda/package.json lib/assets/customResourceLambda/');
 //project.compileTask.exec('esbuild assets/customResourceLambda/index.ts --bundle --platform=node --target=node16 --external:aws-sdk --external:@aws-sdk/client-ec2 --external:@aws-sdk/client-iam --outfile=lib/assets/customResourceLambda/index.js');
-project.compileTask.exec('esbuild assets/customResourceLambda/index.ts --bundle --platform=node --target=node16 --outfile=lib/assets/customResourceLambda/index.js');
+//project.compileTask.exec('esbuild assets/customResourceLambda/index.ts --bundle --platform=node --target=node16 --outfile=lib/assets/customResourceLambda/index.js');
 //project.compileTask.exec('npm install --prefix lib/assets/customResourceLambda');
 project.synth();

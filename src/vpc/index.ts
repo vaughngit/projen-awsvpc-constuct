@@ -8,31 +8,185 @@ import { Stack, Tags, custom_resources as cr, CustomResource, CfnOutput, Duratio
 import { Code, Function, Runtime, Tracing } from 'aws-cdk-lib/aws-lambda';
 //import { NodejsFunction } from 'aws-cdk-lib/aws-lambda-nodejs';
 import { Construct } from 'constructs';
+import { VpcResourceTaggingFunction } from './vpc-resource-tagging-function';
+import { IVpc } from 'aws-cdk-lib/aws-ec2';
+import { PolicyStatement } from 'aws-cdk-lib/aws-iam';
 
 
-export interface IStackProps {
-  environment: string;
-  solutionName: string;
-  costcenter: string;
+
+    /**
+     * Options for creating a VPC object.
+     */
+    export interface VpcOptionsBase {
+        /**
+       * The name of the vpc.
+       * @default solutionName
+       */
+        readonly vpcName: string;
+        /**
+        * What environment are you deploying vpc into.
+        */
+        environment: "dev" | "test" | "stage" | "prod"
+        /**
+        * Provide name to overall solution.
+        */
+        solutionName: string;
+        /**
+        * Provide responsible entity 
+        */
+        costcenter: string;
+        /**
+         * vpc cidr
+         * @default '172.16.0.0/16'
+         */
+        cidr?: string;
+
+    }
+
+    export interface ManagedNgVpcOptions extends VpcOptionsBase{
+      /**
+       * Instance Type for Managed NatGateway
+       * @default t3.nano
+       */
+      instanceType: string; 
+    }
+
+    /**
+     * The calendar for determining if pipeline stage should be open or closed.
+     */
+    export abstract class VpcClass {
+
+          /**
+         * Creates a calendar from an S3 bucket.
+         */
+          public static managedNgVpc(options: ManagedNgVpcOptions): VpcClass {
+            return new class extends VpcClass {
+        
+              public _bind(scope: Construct): VpcClass {
+
+                const natGatewayProvider = ec2.NatProvider.instance({
+                  instanceType: new ec2.InstanceType('t3.nano'),
+                });
+            
+                const demoVpc = new CustomResourceVpc(scope, {
+                  costcenter: options.costcenter,
+                  environment: "dev",
+                  solutionName: options.solutionName,
+                  instanceType: options.instanceType, 
+                  ngwys: natGatewayProvider.configuredGateways, 
+                  vpcName: options.vpcName
+                });
+        
+                  //Typically, for resources created in classes, adding a way to access that resource’s name and ARN is a best practice
+                  this.calendarArn = calendar.calendarArn;
+                  this.calendarName = calendar.calendarName;
+        
+                return demoVpc;
+              }
+            };
+          }
+
+          /**
+         * The VPC object.
+         */
+          public vpc!: ec2.Vpc;
+      
+          protected constructor() {}
+      
+          /**
+           *
+           * @internal
+           */
+          public abstract _bind(scope: Construct): any;
+
+    }
+
   /**
-   * vpc cidr
-   * @default '172.16.0.0/16'
+   * Options for defining a CustomResourceVpc
    */
-  cidr?: string;
+  interface CustomResourceVpcOptions extends ManagedNgVpcOptions {
 
-  /**vpc name
-   * @default solutionName
-  */
-  name: string;
-}
+        /**
+     * The NAT Gateways.
+     *
+     * @default - None. If this is empty, the calendar is being fetched from a local file path.
+     */
+        readonly ngwys: Array<ec2.GatewayConfig>;
+
+    /**
+     * The VPCID.
+     *
+     * @default - None. If this is empty, the calendar is being fetched from a local file path.
+     */
+    readonly vpc: IVpc;
+
+    /**
+     * The role used for getting the calendar file.
+     *
+     * @default - None. If this is empty, the calendar is either being fetched from a local file path or the S3 session
+     * will be created with the credentials already in use.
+     */
+    readonly roleArn?: string;
+  }
 
 
+  /**
+   * The custom resource for getting the calendar and uploading it to SSM.
+   */
+  class CustomResourceVpc extends VpcClass {
+    constructor(scope: Construct, options: CustomResourceVpcOptions) {
+      super();
+
+      const onEvent: Function = new VpcResourceTaggingFunction(scope, 'OnEventHandler');
+
+      // onEvent.addToRolePolicy(new PolicyStatement({
+      //   actions: ['ssm:CreateDocument', 'ssm:UpdateDocument', 'ssm:DeleteDocument'],
+      //   resources: [this.calendarArn],
+      // }));
+
+      
+      onEvent.addToRolePolicy(new PolicyStatement({
+        actions: ['iam:*', 'ec2:*'],
+        effect: iam.Effect.ALLOW,
+        resources: ['*'],
+      }));
+
+      
+      const provider = new cr.Provider(scope, 'Provider', {
+        //onEventHandler: crLambda,
+        onEventHandler: onEvent,
+      });
+  
+      // provider.onEventHandler.addToRolePolicy(
+      //   new iam.PolicyStatement({
+      //     actions: ['iam:*', 'ec2:*'],
+      //     effect: iam.Effect.ALLOW,
+      //     resources: ['*'],
+      //   }),
+      // );
+  
+      // Custom resource to add tag to interface gateways and manage nat gateway:
+      new CustomResource(scope, 'CustomResource', {
+        serviceToken: provider.serviceToken,
+        properties: {
+          //natGateways: Object<ec2.GatewayConfig[]>
+          natGateways: options.ngwys, 
+          vpcId: options.vpc.vpcId,
+          tags: [{ Key: 'environment', Value: options.environment }, { Key: 'solution', Value: options.solutionName }, { Key: 'costcenter', Value: options.costcenter }],
+  
+        },
+      });
+
+    }
+      public _bind() {}
+  }
+    
 export class VTVpc extends Construct {
 
   /** API construct */
   public readonly vpc: ec2.Vpc;
 
-  constructor(parent: Stack, id: string, props: IStackProps) {
+  constructor(parent: Stack, id: string, props: VpcOptionsBase) {
     super(parent, id);
 
     const natGatewayProvider = ec2.NatProvider.instance({
@@ -297,7 +451,7 @@ export class VTVpc extends Construct {
     });
 
      */
-
+/* 
     const crLambda = new Function(this, 'customResourceFunction', {
       functionName: `${props.solutionName}-update-infrastructure-${props.environment}`,
       description: 'customer resource function to tag vpc interfaces and delete natgateway on destroy',
@@ -322,9 +476,13 @@ export class VTVpc extends Construct {
         REGION: parent.region,
       },
     });
+ */
+
+    const onEvent: Function = new VpcResourceTaggingFunction(this, 'OnEventHandler');
 
     const provider = new cr.Provider(this, 'Provider', {
-      onEventHandler: crLambda,
+      //onEventHandler: crLambda,
+      onEventHandler: onEvent,
     });
 
     provider.onEventHandler.addToRolePolicy(

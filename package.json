@@ -8,6 +8,9 @@
   "scripts": {
     "build": "npx projen build",
     "bump": "npx projen bump",
+    "bundle": "npx projen bundle",
+    "bundle:vpc/vpc-resource-tagging.lambda": "npx projen bundle:vpc/vpc-resource-tagging.lambda",
+    "bundle:vpc/vpc-resource-tagging.lambda:watch": "npx projen bundle:vpc/vpc-resource-tagging.lambda:watch",
     "clobber": "npx projen clobber",
     "compat": "npx projen compat",
     "compile": "npx projen compile",
@@ -37,11 +40,12 @@
     "organization": false
   },
   "devDependencies": {
+    "@types/aws-lambda": "^8.10.111",
     "@types/jest": "^27",
     "@types/node": "^14",
     "@typescript-eslint/eslint-plugin": "^5",
     "@typescript-eslint/parser": "^5",
-    "aws-cdk-lib": "2.60.0",
+    "aws-cdk-lib": "2.61.1",
     "constructs": "10.0.5",
     "esbuild": "^0.17.3",
     "eslint": "^8",
@@ -62,7 +66,7 @@
     "typescript": "^4.9.4"
   },
   "peerDependencies": {
-    "aws-cdk-lib": "^2.60.0",
+    "aws-cdk-lib": "^2.61.1",
     "constructs": "^10.0.5"
   },
   "dependencies": {

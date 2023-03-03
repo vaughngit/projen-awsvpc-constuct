@@ -52,4 +52,6 @@ junit.xml
 .jsii
 tsconfig.json
 !/API.md
+/assets/
+!/src/vpc/vpc-resource-tagging-function.ts
 cdk.out
